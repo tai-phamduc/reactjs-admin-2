@@ -1,9 +1,9 @@
-import React from 'react';
-import { BsCart3, BsCurrencyDollar, BsPersonPlus } from 'react-icons/bs';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const OverviewCard = ({ title, value, change, icon, color }) => {
+const OverviewCard = ({ title, value, change, icon, color, background }) => {
   return (
-    <div className={`card border-0 shadow-sm bg-light bg-${color} px-3 py-3 rounded-4`}>
+    <div className={`card border-0 shadow-sm bg-${background} px-3 py-3 rounded-4`}>
       <div className="d-flex justify-content-between align-items-start mb-2">
         <div>
           <small className="text-muted fw-semibold">{title}</small>
@@ -11,7 +11,6 @@ const OverviewCard = ({ title, value, change, icon, color }) => {
         </div>
         <div
           className={`icon-box bg-${color}-subtle text-${color} d-flex align-items-center justify-content-center rounded-3`}
-          style={{ width: '30px', height: '30px' }}
         >
           {icon}
         </div>
@@ -24,39 +23,37 @@ const OverviewCard = ({ title, value, change, icon, color }) => {
 };
 
 const Overview = () => {
+  const [overviewData, setOverviewData] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/overview')
+      .then(response => {
+        setOverviewData(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
   return (
     <div className="p-4">
       <h6 className="fw-bold text-dark d-flex align-items-center">
-        <span className="text-pink me-2">▣</span> Overview
+        <img src="/src/assets/block-icon.png" alt="" />
+        Overview
       </h6>
       <div className="row mt-3 g-3">
-        <div className="col-md-4">
-          <OverviewCard
-            title="Turnover"
-            value="$92,405"
-            change="5.36"
-            icon={<BsCart3 />}
-            color="pink"
-          />
-        </div>
-        <div className="col-md-4">
-          <OverviewCard
-            title="Profit"
-            value="$32,218"
-            change="5.93"
-            icon={<BsCurrencyDollar />}
-            color="primary"
-          />
-        </div>
-        <div className="col-md-4">
-          <OverviewCard
-            title="New customer"
-            value="298"
-            change="6.84"
-            icon={<BsPersonPlus />}
-            color="primary"
-          />
-        </div>
+        {overviewData.map(item => (
+          <div className="col-md-4" key={item.id}>
+            <OverviewCard
+              title={item.title}
+              value={item.value}
+              change={item.change}
+              icon={<img src={`/src/assets/${item.icon}`} alt="" />}
+              color={item.color}
+              background={item.background}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );
