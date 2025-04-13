@@ -36,12 +36,12 @@ const Overview = () => {
   }, []);
 
   return (
-    <div className="p-4">
-      <h6 className="fw-bold text-dark d-flex align-items-center">
+    <div className="container py-3">
+      <h6 className="fw-bold text-dark d-flex align-items-center gap-2 mb-3">
         <img src="/src/assets/block-icon.png" alt="" />
-        Overview
+        <span className="fs-5">Overview</span>
       </h6>
-      <div className="row mt-3 g-3">
+      <div className="row g-3">
         {overviewData.map(item => (
           <div className="col-md-4" key={item.id}>
             <OverviewCard

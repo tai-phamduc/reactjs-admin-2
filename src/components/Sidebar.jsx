@@ -2,12 +2,12 @@ import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
   const navItems = [
-    { label: 'Dashboard', to: '/', icon: 'bi-grid' },
-    { label: 'Projects', to: '/projects', icon: 'bi-folder' },
-    { label: 'Teams', to: '/teams', icon: 'bi-people' },
-    { label: 'Analytics', to: '/analytics', icon: 'bi-speedometer2' },
-    { label: 'Messages', to: '/messages', icon: 'bi-chat-dots' },
-    { label: 'Integrations', to: '/integrations', icon: 'bi-code-slash' },
+    { label: 'Dashboard', to: '/', icon: '/src/assets/block-icon.png' },
+    { label: 'Projects', to: '/projects', icon: '/src/assets/folder-icon.png' },
+    { label: 'Teams', to: '/teams', icon: '/src/assets/group-icon.png' },
+    { label: 'Analytics', to: '/analytics', icon: '/src/assets/pie-chart-icon.png' },
+    { label: 'Messages', to: '/messages', icon: '/src/assets/chat-icon.png' },
+    { label: 'Integrations', to: '/integrations', icon: '/src/assets/code-icon.png' },
   ];
 
   return (
@@ -21,10 +21,10 @@ const Sidebar = () => {
             <NavLink
               to={to}
               className={({ isActive }) =>
-                'nav-link d-flex align-items-center ' + (isActive ? 'active bg-primary text-white' : 'text-black-50')
+                'nav-link d-flex align-items-center gap-2 ' + (isActive ? 'active bg-primary text-white' : 'text-black-50')
               }
             >
-              <i className={`bi ${icon} me-2`}></i>
+              <img src={`${icon}`} alt="" />
               {label}
             </NavLink>
           </li>

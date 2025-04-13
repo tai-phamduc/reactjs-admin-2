@@ -2,10 +2,10 @@ import React from 'react';
 
 const TopNavbar = () => {
   return (
-    <div className="d-flex justify-content-between align-items-center bg-white">
+    <div className="container pb-3 border-bottom border-light d-flex justify-content-between align-items-center bg-white">
       {/* Left - Title */}
       <div>
-        <h5 className="fw-bold text-primary mb-0">Dashboard</h5>
+        <h5 className="fs-3 fw-bold text-primary mb-0">Dashboard</h5>
       </div>
 
       {/* Right - Search + Icons */}

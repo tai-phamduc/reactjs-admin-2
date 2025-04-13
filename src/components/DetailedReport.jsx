@@ -4,7 +4,9 @@ import {
   Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { FileDownload, FileUpload, Edit, AddBoxOutlined } from '@mui/icons-material';
+import {
+  FileDownload, FileUpload, Edit, AddBoxOutlined, DeleteOutlined
+} from '@mui/icons-material';
 import axios from 'axios';
 
 const getStatusChip = (status) => {
@@ -26,6 +28,7 @@ const getStatusChip = (status) => {
 
 const DetailedReport = () => {
   const [rows, setRows] = useState([]);
+  const [selectedIds, setSelectedIds] = useState([]);
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState('add'); // 'add' or 'edit'
   const [selectedId, setSelectedId] = useState(null);
@@ -113,16 +116,22 @@ const DetailedReport = () => {
       .catch(err => console.error('Error updating report:', err));
   };
 
+  const handleDelete = () => {
+    if (selectedIds.length === 0) return;
+
+    Promise.all(
+      selectedIds.map(id =>
+        axios.delete(`http://localhost:3001/detailedReport/${id}`)
+      )
+    )
+      .then(() => {
+        setRows(prev => prev.filter(row => !selectedIds.includes(row.id)));
+        setSelectedIds([]);
+      })
+      .catch(err => console.error('Error deleting reports:', err));
+  };
+
   const columns = [
-    {
-      field: 'checkbox',
-      headerName: '',
-      width: 50,
-      renderCell: () => <input type="checkbox" />,
-      sortable: false,
-      filterable: false,
-      disableColumnMenu: true
-    },
     {
       field: 'name',
       headerName: 'Customer Name',
@@ -157,14 +166,24 @@ const DetailedReport = () => {
   ];
 
   return (
-    <Box sx={{ height: 500, width: '100%', p: 2 }}>
+    <Box className="container" sx={{ height: 500 }}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6" fontWeight={700}>
-          <i className="bi bi-file-earmark-text"></i> Detailed report
+        <Typography variant="h6" fontWeight={700} className='d-flex align-items-center gap-2'>
+          <img src="src/assets/file-icon.png" alt="" />
+          <span className="fs-5">Detailed Report</span>
         </Typography>
         <Stack direction="row" spacing={1}>
           <Button onClick={handleOpenDialog} variant="outlined" color="primary" startIcon={<AddBoxOutlined />}>
             Add
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            startIcon={<DeleteOutlined />}
+            onClick={handleDelete}
+            disabled={selectedIds.length === 0}
+          >
+            Delete
           </Button>
           <Button variant="outlined" startIcon={<FileDownload />}>Import</Button>
           <Button variant="outlined" color="error" startIcon={<FileUpload />}>Export</Button>
@@ -176,6 +195,8 @@ const DetailedReport = () => {
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}
+        checkboxSelection
+        onRowSelectionModelChange={(ids) => setSelectedIds(ids)}
         disableSelectionOnClick
         autoHeight
       />
